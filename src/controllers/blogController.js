@@ -98,9 +98,10 @@ let update1 = async function(req,res){
 
 
      
-module.exports.createBlog=createBlog
+// module.exports.createBlog=createBlog
 
-module.exports.filterBlogs=filterBlogs
-module.exports.update1=update1
-module.exports.deleteBlog=deleteBlog
-module.exports.deleteBlogs=deleteBlogs
+// module.exports.filterBlogs=filterBlogs
+// module.exports.update1=update1
+// module.exports.deleteBlog=deleteBlog
+// module.exports.deleteBlogs=deleteBlogs
+module.exports={createBlog,filterBlogs,update1,deleteBlog,deleteBlogs}

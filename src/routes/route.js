@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const blogController = require("../controllers/blogController.js")
+const {createBlog,filterBlogs,update1,deleteBlog,deleteBlogs} = require("../controllers/blogController.js")
 const AuthorController = require("../controllers/authorController")
 const authentication= require("../middlewares/authentication")
 const authorization= require("../middlewares/authorization")
@@ -11,13 +11,16 @@ router.post("/createAuthor",mid.checkBody,validation.validateAuthorModel  , Auth
 
 router.post("/login",mid.checkBody ,AuthorController.loginUser)
 
-router.post("/createBlog", mid.checkBody,validation.validateBlogModel,authentication.authenticate,authorization.authorisePostBlog,  blogController.createBlog)
+router.post("/createBlog", mid.checkBody,validation.validateBlogModel,authentication.authenticate,authorization.authorisePostBlog,  createBlog)
 
-router.get("/getBlog",authentication.authenticate,authorization.authoriseGetAndDelete, blogController.filterBlogs)
+router.get("/getBlog",authentication.authenticate,authorization.authoriseGetAndDelete, filterBlogs)
 
-router.put("/blog/:blogId",mid.checkBody,mid.validBlogId,authentication.authenticate,authorization.authorisePutAndDelete, blogController.update1)
+router.put("/blog/:blogId",mid.checkBody,mid.validBlogId,authentication.authenticate,authorization.authorisePutAndDelete, update1)
 
-router.delete("/blog/:blogId",authentication.authenticate,authorization.authorisePutAndDelete,mid.validBlogId,blogController.deleteBlog)
+router.delete("/blog/:blogId",authentication.authenticate,authorization.authorisePutAndDelete,mid.validBlogId, deleteBlog)
 
-router.delete("/blogs",authentication.authenticate,authorization.authoriseGetAndDelete,blogController.deleteBlogs)
+router.delete("/blogs",authentication.authenticate,authorization.authoriseGetAndDelete, deleteBlogs)
 module.exports = router;
+// router.route("/products")
+// .post(createProduct)
+// .get(getProduct)
