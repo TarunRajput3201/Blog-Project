@@ -8,6 +8,7 @@ let createBlog = async function(req,res){
    try{
      let data = req.body
     let create = await blog.create(data)
+    
     res.status(201).send({status : true, data : create})
  }
  catch(err){
@@ -15,29 +16,16 @@ let createBlog = async function(req,res){
  }
 }
 
-let getBlogs = async function(req,res){
-   try {
-     let data = await blog.find({isDeleted : false,isPublished : true})
-    if(data.length>0){
-        res.status(200).send({status : true, data : data})
-    } else {
-        res.status(404).send({status : false, msg : "NO documents found"})
-    }
-}
-catch(err){
-    res.status(500).send({error : err.message})
-}
-}
 
 let filterBlogs = async function(req,res){
    try{
      let a=req.query
-    let data = await blog.find(a)
-    if(data.length>0){
-        res.status(200).send({status : true, data : data})
-    } else {
-        res.status(400).send({status : false, msg : "No data found"})
-    }
+    let data = await blog.find({$and:[a,{isDeleted : false}]})
+    if(data.length>0)
+     return   res.status(200).send({status : true, data : data})
+     else 
+    return    res.status(400).send({status : false, msg : "No data found"})
+    
 }
 catch(err){
     res.status(500).send({error : err.message})
@@ -88,7 +76,7 @@ let update1 = async function(req,res){
         res.status(200).send({status:"deleted"})
 
        }
-       else{res.status(404).send({status:false, msg: "no document found"})}
+       else return res.status(404).send({status:false, msg: "no document found"})
       }
       catch(err){
         res.status(500).send({error : err.message})
@@ -96,14 +84,12 @@ let update1 = async function(req,res){
     }
     let deleteBlogs = async function(req,res){
         try{
-            let a=req.query
-         
-         let data = await blog.findOneAndUpdate({a, isDeleted:false}, {$set:{isDeleted:true,deletedAt:Date.now()}}, {new:true})
-         if(data.length>0){
-             res.status(200).send({status : true, data : data})
-         } else {
-             res.status(400).send({status : false, msg : "No data found"})
+            let a= req.query
+         let data = await blog.findOneAndUpdate({$and : [a, {isPublished : false},{isDeleted:false}]},{$set : {isDeleted : true, deletedAt : Date.now()}},{new:true})
+         if(!data){
+             return res.status(400).send({status : false, msg : "No data found"})
          }
+         return res.status(200).send({status : true, data : data})
      }
      catch(err){
          res.status(500).send({error : err.message})
@@ -111,10 +97,9 @@ let update1 = async function(req,res){
      }
 
 
-
      
 module.exports.createBlog=createBlog
-module.exports.getBlogs=getBlogs
+
 module.exports.filterBlogs=filterBlogs
 module.exports.update1=update1
 module.exports.deleteBlog=deleteBlog

@@ -5,11 +5,11 @@ const createAuthor = async function (req, res) {
     try {
         let data = req.body
         console.log(data)
-        if ( Object.keys(data).length != 0) {
+         
             let savedData = await AuthorModel.create(data)
             res.status(201).send({ msg: savedData })
-        }
-        else res.status(400).send({ msg: "BAD REQUEST"})
+        
+         
     }
     catch (err) {
         console.log("This is the error :", err.message)
@@ -17,7 +17,7 @@ const createAuthor = async function (req, res) {
     }
 }
 const loginUser = async function (req, res) {
-    let userName = req.body.emailId;
+   let userName = req.body.emailId;
     let password = req.body.password;
   
     let user = await AuthorModel.findOne({ emailId: userName, password: password });
@@ -35,7 +35,8 @@ const loginUser = async function (req, res) {
       );
       res.setHeader("x-api-key", token);
       res.send({ status: true, data: token });
-    };
+      }
+    
 
 
 

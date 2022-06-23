@@ -7,21 +7,26 @@ const authenticate = function(req, res, next) {
     if (!token) {token = req.headers["x-api-key"]}
   
    
-    if (!token) {
+    if (!token) 
 
-    res.send({ status: false, msg: "token must be present" })}
+    return res.send({ status: false, msg: "token must be present" })
   
     
     
     
-    let decodedToken = jwt.verify(token, "functionup-radon");
-    if (!decodedToken)
-      return res.status(400).send({ status: false, msg: "token is invalid" });
-  else{
-    next()}}
-    catch(err)
+    jwt.verify(token,"functionup-radon", (err, user) => {
+      if (err) 
+          return res.status(403).send({msg: "invalid token"});
+      
+
+      req.user = user;
+      next();
+  });
+  }
+    catch(err) 
+
     {
-        console.log(err.message)
+        
         res.status(500).send(err.message)
      }
 
