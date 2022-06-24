@@ -49,6 +49,7 @@ let authoriseGetAndDelete = async function(req,res,next){
    let authorisePutAndDelete = async function(req,res,next){
     try{let blogId= req.params.blogId
   let data = await blog.findById(blogId)
+  if(!data){return res.status(404).send({status:false, msg:"blogid doesnot exists"})}
    let authorId = data.authorId
     
     

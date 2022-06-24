@@ -37,7 +37,17 @@ let updateBlog = async function (req, res) {
     try {
         let blogId = req.params.blogId
         let bodyData = req.body
+        let check=bodyData.tags
+        let check2=bodyData.subcategory
+        if(!check){return res.status(400).send({status:false, msg: "tags field is required" })}
+        if(!check2){return res.status(400).send({status:false, msg: "subcategory field is required" })}
+        
+
+   
+   
         let dataById = await blog.findById(blogId)
+        if(!dataById)
+    {return res.status(404).send({status: false, msg : "No such blog exists"})}
         let tag = dataById.tags
 
         let newTag = bodyData.tags

@@ -15,7 +15,7 @@ router.post("/blogs", mid.checkBody,validation.validateBlogModel,authentication.
 
 router.get("/blogs",authentication.authenticate,authorization.authoriseGetAndDelete, filterBlogs)
 
-router.put("/blogs/:blogId",mid.checkBody,mid.validBlogId,authentication.authenticate,authorization.authorisePutAndDelete, updateBlog)
+router.put("/blogs/:blogId",mid.checkBody,authentication.authenticate,authorization.authorisePutAndDelete, updateBlog)
 
 router.delete("/blogs/:blogId",mid.validBlogId,authentication.authenticate,authorization.authorisePutAndDelete, deleteBlog)
 
