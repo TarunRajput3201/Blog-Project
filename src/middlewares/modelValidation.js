@@ -1,5 +1,5 @@
 const author = require('../models/authorModel.js')
-
+const emailValidation=require("email-validator")
 let validateAuthorModel = async function(req,res,next){
   try{  let data = req.body
     let check = data.fname
@@ -29,12 +29,14 @@ let validateAuthorModel = async function(req,res,next){
         if(!checkEmail) {return res.status(400).send({status : false , msg : "Please enter your Email"})}
 
 
-     var validateEmail = function(email) {
-    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    //  var validateEmail = function(email) {
+    //  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
      
-    return re.test(email)
-};
-if(validateEmail(checkEmail)==false)
+    // return re.test(email)};
+    let validateEmail= emailValidation.validate(checkEmail)
+
+
+if(validateEmail==false)
  {return res.send({msg: "Please enter a valid email"})}
 
 let checkDuplicateEmail=await author.findOne({email:checkEmail})

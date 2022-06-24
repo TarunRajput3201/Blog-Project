@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const createAuthor = async function (req, res) {
     try {
         let data = req.body
-        console.log(data)
+        
          
             let savedData = await AuthorModel.create(data)
             res.status(201).send({ msg: savedData })
@@ -17,10 +17,10 @@ const createAuthor = async function (req, res) {
     }
 }
 const loginUser = async function (req, res) {
-   let userName = req.body.emailId;
+   let userName = req.body.email;
     let password = req.body.password;
   
-    let user = await AuthorModel.findOne({ emailId: userName, password: password });
+    let user = await AuthorModel.findOne({ email: userName, password: password });
     if (!user)
       return res.send({
         status: false,
@@ -34,7 +34,7 @@ const loginUser = async function (req, res) {
         "functionup-radon"
       );
       res.setHeader("x-api-key", token);
-      res.send({ status: true, data: token });
+      res.status(201).send({ status: true, data: token });
       }
     
 

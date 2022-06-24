@@ -1,5 +1,6 @@
 
 const author = require('../models/authorModel.js')
+const mongoose =require("mongoose");
 
 const blog = require('../models/blogModel.js')
 
@@ -18,7 +19,18 @@ catch(err){
 let validAuthorId = async function(req,res,next){
    try {
      let id = req.body.authorId
-
+    // let validAuthorId= mongoose.isValidObjectId(id)
+  //    var ObjectId = mongoose.Types.ObjectId;
+  //    if(ObjectId.isValid(id)){
+  //     console.log('Object id is valid'); 
+  //  }else{
+  //     console.log('Invalid Object id');
+  //  }
+    // let validAuthorId=ObjectId.isValid("Id")
+    // if(!mongoose.isValidObjectId(id))
+    // {
+    //   return res.status(400).send({status:false , msg: "please enter a valid author id"})
+    // }
     let check = await author.findById(id)
 
     if(!check)
