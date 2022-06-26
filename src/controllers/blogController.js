@@ -19,12 +19,21 @@ let createBlog = async function (req, res) {
 
 let filterBlogs = async function (req, res) {
     try {
-        let queryData = req.query
-        let data = await blog.find({ $and: [queryData, { isDeleted: false }] })
+
+         
+        let queryData=req.query
+        // let a= queryData.tags.split(" ").map(element => element.trim())
+        // queryData.tags=a
+        if(!mongoose.isValidObjectId(queryData.authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
+        let authorId =queryData.authorId
+        let category =queryData.category
+        let tags =queryData.tags
+        let subcategory =queryData.subcategory
+        let data = await blog.find({ $and: [{$or: [{authorId:authorId}, {category:category},{tags:tags},{subcategory:subcategory}]}, { isDeleted: false  }, {isPublished:true}] })
         if (data.length > 0)
             return res.status(200).send({ status: true, data: data })
         else
-            return res.status(400).send({ status: false, msg: "No data found" })
+            return res.status(404).send({ status: false, msg: "No data found" })
 
     }
     catch (err) {
@@ -84,7 +93,7 @@ const deleteBlog = async function (req, res) {
         let data = await blog.find({ _id: blogId, isDeleted: false })
         if (data.length > 0) {
             let DeleteBlog = await blog.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
-            res.status(200).send({ status: "deleted" })
+            res.status(200).send()
 
         }
         else return res.status(404).send({ status: false, msg: "no document found" })
@@ -95,10 +104,20 @@ const deleteBlog = async function (req, res) {
 }
 let deleteBlogs = async function (req, res) {
     try {
-        let queryData = req.query
-        let data = await blog.findOneAndUpdate({ $and: [queryData, { isPublished: false }, { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
+        let queryData=req.query
+        
+        if(!mongoose.isValidObjectId(queryData.authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
+        let authorId =queryData.authorId
+        let category =queryData.category
+        let tags =queryData.tags
+        let subcategory =queryData.subcategory
+         if(!authorId){return res.status(400).send({status:false, msg : "please enter author id"})}
+         if(!category){return res.status(400).send({status:false, msg : "please enter category"})}
+         if(!tags){return res.status(400).send({status:false, msg : "please enter tags"})}
+         if(!subcategory){return res.status(400).send({status:false, msg : "please enter subcategory"})}
+        let data = await blog.findOneAndUpdate({ $and: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }, { isPublished: false }, { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
         if (!data) {
-            return res.status(400).send({ status: false, msg: "No data found" })
+            return res.status(404).send({ status: false, msg: "No data found" })
         }
         return res.status(200).send({ status: true, data: data })
     }
@@ -109,10 +128,5 @@ let deleteBlogs = async function (req, res) {
 
 
 
-// module.exports.createBlog=createBlog
 
-// module.exports.filterBlogs=filterBlogs
-// module.exports.update1=update1
-// module.exports.deleteBlog=deleteBlog
-// module.exports.deleteBlogs=deleteBlogs
 module.exports = { createBlog, filterBlogs, updateBlog, deleteBlog, deleteBlogs }

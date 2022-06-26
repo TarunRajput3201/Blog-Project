@@ -16,12 +16,12 @@ const authenticate = function(req, res, next) {
     
     jwt.verify(token,"functionup-radon", (err, user) => {
       if (err) 
-          return res.status(403).send({msg: "invalid token"});
+          return res.status(401).send({msg: "invalid token"});
       
 
       req.user = user;
       let userId = req.user.userId
-      console.log(userId)
+      
       next();
   });
   }

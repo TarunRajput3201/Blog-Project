@@ -18,29 +18,13 @@ catch(err){
 
 let validAuthorId = async function(req,res,next){
    try {
-    //  let id = req.body.authorId
-    // let a= objectValidate.idValidate(`${id}`)
-    // if(a==false)
-    // {
-    //   return res.status(400).send({status:false , msg: "please enter a valid author id"})
-    // }
-
-    // let validAuthorId= mongoose.isValidObjectId(id)
-  //    var ObjectId = mongoose.Types.ObjectId;
-  //    if(ObjectId.isValid(id)){
-  //     console.log('Object id is valid'); 
-  //  }else{
-  //     console.log('Invalid Object id');
-  //  }
-    // let validAuthorId=ObjectId.isValid("Id")
-    // if(!mongoose.isValidObjectId(id))
-    // {
-    //   return res.status(400).send({status:false , msg: "please enter a valid author id"})
-    // }
+     let id = req.body.authorId
+     if(!mongoose.isValidObjectId(id)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
+  
     let check = await author.findById(id)
 
     if(!check)
-    {return res.status(400).send({status: false, msg : "No such author is exists"})}
+    {return res.status(404).send({status: false, msg : "No such author is exists"})}
     
     else{next()}
 }
@@ -51,7 +35,7 @@ catch(err){
 let validBlogId = async function(req,res,next){
   try {
     let id = req.params.blogId
-
+    if(!mongoose.isValidObjectId(id)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
    let check = await blog.findById(id)
 
    if(!check)

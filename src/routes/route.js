@@ -13,7 +13,7 @@ router.post("/login",mid.checkBody , AuthorController.loginUser)
 
 router.post("/blogs", mid.checkBody,validation.validateBlogModel,authentication.authenticate,authorization.authorisePostBlog,  createBlog)
 
-router.get("/blogs",authentication.authenticate,authorization.authoriseGetAndDelete, filterBlogs)
+router.get("/blogs",authentication.authenticate, filterBlogs)
 
 router.put("/blogs/:blogId",mid.checkBody,authentication.authenticate,authorization.authorisePutAndDelete, updateBlog)
 

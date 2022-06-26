@@ -1,4 +1,5 @@
 const author = require('../models/authorModel.js')
+const mongoose = require('mongoose');
 const emailValidation=require("email-validator")
 let validateAuthorModel = async function(req,res,next){
   try{  let data = req.body
@@ -68,6 +69,7 @@ let validateBlogModel = async function(req,res,next){
     let checkAuthorId = data.authorId
     if(!checkAuthorId)
     {return res.status(400).send({status : false , msg : "Please enter authorId"})}
+    if(!mongoose.isValidObjectId(checkAuthorId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
     
      let checkAuthor = await author.findById(checkAuthorId)
      if(!checkAuthor)

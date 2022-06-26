@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const blog = require("../models/blogModel.js")
-
+const mongoose = require('mongoose');
 // let authorisation = async function(req,res,next){
 //   let blogId = req.params.blogId
 //   let userId = req.user.userId
@@ -37,7 +37,9 @@ const blog = require("../models/blogModel.js")
 let authoriseGetAndDelete = async function(req,res,next){
     try{
     let authorId = req.query.authorId
+    if(!mongoose.isValidObjectId(authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
     let userId = req.user.userId
+
     if(userId!=authorId)
     return  res.status(404).send({status : false, msg : "Not allowed to modify another data"})
      
@@ -48,10 +50,12 @@ let authoriseGetAndDelete = async function(req,res,next){
   }
    let authorisePutAndDelete = async function(req,res,next){
     try{let blogId= req.params.blogId
+      if(!mongoose.isValidObjectId(blogId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
   let data = await blog.findById(blogId)
+
   if(!data){return res.status(404).send({status:false, msg:"blogid doesnot exists"})}
    let authorId = data.authorId
-    
+   
     
     let userId = req.user.userId
     
@@ -66,6 +70,7 @@ let authoriseGetAndDelete = async function(req,res,next){
   }
   let authorisePostBlog = async function(req,res,next){
     try{let authorId= req.body.authorId
+  
     
     let userId = req.user.userId
      if(authorId!=userId)
