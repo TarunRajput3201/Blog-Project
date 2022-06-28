@@ -20,7 +20,7 @@ const authenticate = function(req, res, next) {
       
 
       req.user = user;
-      let userId = req.user.userId
+     
       
       next();
   });

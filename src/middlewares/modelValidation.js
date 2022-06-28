@@ -30,10 +30,7 @@ let validateAuthorModel = async function(req,res,next){
         if(!checkEmail) {return res.status(400).send({status : false , msg : "Please enter your Email"})}
 
 
-    //  var validateEmail = function(email) {
-    //  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-     
-    // return re.test(email)};
+    
     let validateEmail= emailValidation.validate(checkEmail)
 
 
@@ -47,6 +44,9 @@ if(checkDuplicateEmail) return res.status(400).send({status:false , msg: "email 
     let checkPassword = data.password
     if(!checkPassword)
      {return res.status(400).send({status : false , msg : "Please enter your Password"})}
+     if(data.password.length<8)
+     {return res.status(400).send({status: false, msg: "password length must be atleast 8"  })}
+     
     
     next()
 }
