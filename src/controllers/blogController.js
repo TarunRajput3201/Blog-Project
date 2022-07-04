@@ -76,7 +76,8 @@ let updateBlog = async function (req, res) {
         }}
         let title = req.body.title
         let body = req.body.body
-        let update1 = await blog.findOneAndUpdate({ _id: blogId }, { $set: { title: title, boby: body, tags: tag, subcategory: subCategory, isPublished: true, publishedAt: Date.now() } }, { new: true })
+        let isPublished=req.body.isPublished
+        let update1 = await blog.findOneAndUpdate({ _id: blogId }, { $set: { title: title, boby: body, tags: tag, subcategory: subCategory, isPublished: isPublished, publishedAt: Date.now() } }, { new: true })
         res.status(200).send({ status: true,message:"updated succesfully", data: update1 })
     }
     catch (err) {
