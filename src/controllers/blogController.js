@@ -110,9 +110,9 @@ let deleteBlogs = async function (req, res) {
         let tags =queryData.tags
         let subcategory =queryData.subcategory
         if(!mongoose.isValidObjectId(authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})}
-        let dataToBeDeleted=await blog.find({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }],  isPublished: false , isDeleted: false })
+        let dataToBeDeleted=await blog.find({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }], isDeleted: false })
         if(dataToBeDeleted.length==0){return res.status(404).send({status:false, msg: "Already deleted"})}
-        let data = await blog.updateMany({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }, { isPublished: false }, { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
+        let data = await blog.updateMany({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory },  { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
         if (!data) {
             return res.status(404).send({ status: false, msg: "No data found" })
         }
