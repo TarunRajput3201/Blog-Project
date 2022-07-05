@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const author = require('../models/authorModel.js')
+const blogModel = require('../models/blogModel.js')
 
 const blog = require('../models/blogModel.js')
 
@@ -108,11 +109,10 @@ let deleteBlogs = async function (req, res) {
         let category =queryData.category
         let tags =queryData.tags
         let subcategory =queryData.subcategory
-         if(!authorId){return res.status(400).send({status:false, msg : "please enter author id"})}
-         if(!category){return res.status(400).send({status:false, msg : "please enter category"})}
-         if(!tags){return res.status(400).send({status:false, msg : "please enter tags"})}
-         if(!subcategory){return res.status(400).send({status:false, msg : "please enter subcategory"})}
-        let data = await blog.findOneAndUpdate({ $and: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }, { isPublished: false }, { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
+        if(!mongoose.isValidObjectId(authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})}
+        let dataToBeDeleted=await blog.find({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }],  isPublished: false , isDeleted: false })
+        if(dataToBeDeleted.length==0){return res.status(404).send({status:false, msg: "Already deleted"})}
+        let data = await blog.updateMany({ $in: [{ authorId:authorId },{ category:category },{ tags:tags },{ subcategory:subcategory }, { isPublished: false }, { isDeleted: false }] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
         if (!data) {
             return res.status(404).send({ status: false, msg: "No data found" })
         }
