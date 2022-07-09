@@ -4,7 +4,11 @@ const mongoose = require('mongoose');
 
 let authoriseGetAndDelete = async function(req,res,next){
     try{
-    let authorId = req.query.authorId
+      let queryData=req.query
+    let authorId = queryData.authorId
+    
+    if(!queryData){return res.status(400).send({status:false, msg: "please provide data for filter"})}
+
     if(!mongoose.isValidObjectId(authorId)){ return res.status(400).send({status:false, msg: "invalid author id"})     }
     let userId = req.user.userId
 
